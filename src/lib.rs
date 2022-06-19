@@ -25,7 +25,7 @@ pub fn init() {
     x86_64::instructions::interrupts::enable();
 }
 pub trait Testable {
-    fn run(&self) -> ();
+    fn run(&self);
 }
 
 impl<T> Testable for T

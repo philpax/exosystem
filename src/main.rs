@@ -13,6 +13,7 @@ use core::panic::PanicInfo;
 
 entry_point!(kernel_main);
 
+#[allow(clippy::print_literal)]
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
     use blog_os::allocator;
     use blog_os::memory::{self, BootInfoFrameAllocator};
