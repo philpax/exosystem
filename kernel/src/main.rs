@@ -1,26 +1,26 @@
 #![no_std]
 #![no_main]
 #![feature(custom_test_frameworks)]
-#![test_runner(blog_os::test_runner)]
+#![test_runner(blog_os_kernel::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
 extern crate alloc;
 
-use blog_os::println;
-use blog_os::task::{executor::Executor, keyboard, Task};
-use bootloader::{entry_point, BootInfo};
+use blog_os_kernel::println;
+use blog_os_kernel::task::{executor::Executor, keyboard, Task};
+use bootloader_api::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 
 entry_point!(kernel_main);
 
 #[allow(clippy::print_literal)]
 fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
-    use blog_os::allocator;
-    use blog_os::memory::{self, BootInfoFrameAllocator};
+    use blog_os_kernel::allocator;
+    use blog_os_kernel::memory::{self, BootInfoFrameAllocator};
     use x86_64::VirtAddr;
 
     println!("Hello World{}", "!");
-    blog_os::init();
+    blog_os_kernel::init();
 
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset.into_option().unwrap());
     let mut mapper = unsafe { memory::init(phys_mem_offset) };
@@ -42,13 +42,13 @@ fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    blog_os::hlt_loop();
+    blog_os_kernel::hlt_loop();
 }
 
 #[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    blog_os::test_panic_handler(info)
+    blog_os_kernel::test_panic_handler(info)
 }
 
 async fn async_number() -> u32 {
