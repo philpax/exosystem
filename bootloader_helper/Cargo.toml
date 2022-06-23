@@ -1,0 +1,10 @@
+[package]
+edition = "2021"
+name = "bootloader_helper"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[target.'cfg(not(target_os = "none"))'.dependencies]
+bootloader-locator = "0.0.4"
+locate-cargo-manifest = "0.2.0"
