@@ -1,7 +1,7 @@
 [package]
 authors = ["Philpax <me@philpax.me>", "Philipp Oppermann <dev@phil-opp.com>"]
 edition = "2021"
-name = "blog_os"
+name = "exosystem"
 version = "0.1.0"
 
 [[test]]
