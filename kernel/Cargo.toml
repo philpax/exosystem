@@ -21,6 +21,7 @@ spin = "0.9.3"
 uart_16550 = "0.2.18"
 volatile = "0.2.6"
 x86_64 = "0.14.9"
+wasmi = { git = "https://github.com/paritytech/wasmi.git", rev = "8a77c1f625b5c80cc758c510054afe8d16ebd54c", default-features = false }
 
 [dependencies.lazy_static]
 features = ["spin_no_std"]
