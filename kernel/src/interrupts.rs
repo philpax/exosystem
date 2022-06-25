@@ -1,4 +1,6 @@
-use crate::{gdt, hlt_loop, print, println};
+use crate::{gdt, hlt_loop, println};
+// use conquer_once::spin::OnceCell;
+// use crossbeam_queue::ArrayQueue;
 use lazy_static::lazy_static;
 use pic8259::ChainedPics;
 use spin;
@@ -72,19 +74,33 @@ extern "x86-interrupt" fn double_fault_handler(
 }
 
 extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: InterruptStackFrame) {
-    print!(".");
     unsafe {
         PICS.lock()
             .notify_end_of_interrupt(InterruptIndex::Timer.as_u8());
     }
 }
 
+// static SCANCODE_QUEUE: OnceCell<ArrayQueue<u8>> = OnceCell::uninit();
+
+// /// Called by the keyboard interrupt handler
+// ///
+// /// Must not block or allocate.
+// pub(crate) fn add_scancode(scancode: u8) {
+//     if let Ok(queue) = SCANCODE_QUEUE.try_get() {
+//         if queue.push(scancode).is_err() {
+//             println!("WARNING: scancode queue full; dropping keyboard input");
+//         }
+//     } else {
+//         println!("WARNING: scancode queue uninitialized");
+//     }
+// }
+
 extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: InterruptStackFrame) {
     use x86_64::instructions::port::Port;
 
     let mut port = Port::new(0x60);
-    let scancode: u8 = unsafe { port.read() };
-    crate::task::keyboard::add_scancode(scancode);
+    let _scancode: u8 = unsafe { port.read() };
+    // add_scancode(scancode);
 
     unsafe {
         PICS.lock()
