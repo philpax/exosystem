@@ -9,7 +9,6 @@ extern crate alloc;
 use alloc::{boxed::Box, vec::Vec};
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
-use exosystem::allocator::HEAP_SIZE;
 
 entry_point!(main);
 
@@ -46,9 +45,11 @@ fn large_vec() {
     assert_eq!(vec.iter().sum::<u64>(), (n - 1) * n / 2);
 }
 
+const ALLOC_COUNT: usize = 100 * 1024;
+
 #[test_case]
 fn many_boxes() {
-    for i in 0..HEAP_SIZE {
+    for i in 0..ALLOC_COUNT {
         let x = Box::new(i);
         assert_eq!(*x, i);
     }
@@ -57,7 +58,7 @@ fn many_boxes() {
 #[test_case]
 fn many_boxes_long_lived() {
     let long_lived = Box::new(1); // new
-    for i in 0..HEAP_SIZE {
+    for i in 0..ALLOC_COUNT {
         let x = Box::new(i);
         assert_eq!(*x, i);
     }
